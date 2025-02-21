@@ -13,7 +13,6 @@ relogio = pygame.time.Clock()
 
 # cores RGB
 preta = (0, 0, 0)
-a = "RM"
 branca = (255, 255, 255)
 vermelha = (255, 0, 0)
 verde = (0, 255, 0)
@@ -28,13 +27,11 @@ largura_topo = 5
 raio_v = 30
 raio_m = 15
 pontuacao = 0
-
-
 def conexaobd():
     try:
         return oracledb.connect(
-            user= a + f + z + s,
-            password= "061004",
+            user= os.getenv('DBUser'),
+            password= os.getenv('DBPass'),
             host="oracle.fiap.com.br",
             port=1521,
             service_name="ORCL")
@@ -68,8 +65,6 @@ def obter_id_usuario(nome):
     conexao.close()
     return id_usuario
 
-f = "55"
-
 def salvar_pontuacao(id_usuario, pontuacao):
     conexao = conexaobd()
     if conexao is None:
@@ -97,7 +92,6 @@ def obter_recorde(id_usuario):
     conexao.close()
     return recorde if recorde is not None else 0  # Retorna 0 se ainda não houver pontuação
 
-
 def entrada_nome():
     pygame.init()
     fonte = pygame.font.SysFont("Helvetica", 40)
@@ -121,7 +115,6 @@ def entrada_nome():
                     nome = nome[:-1]
                 elif len(nome) < 10:
                     nome += evento.unicode
-
 def gerar_comida():
     comida_x = round(random.randrange(0, largura - tamanho_quadrado) / float(tamanho_quadrado)) * float(tamanho_quadrado)
     comida_y = round(random.randrange(0, altura - tamanho_quadrado) / float(tamanho_quadrado)) * float(tamanho_quadrado)
@@ -134,7 +127,7 @@ def desenhar_comida(tamanho, comida_x, comida_y):
 def desenhar_cobra(tamanho, pixels):
     for pixel in pixels:
         pygame.draw.rect(tela, salmao, [pixel[0], pixel[1], tamanho, tamanho])
-s = "45"
+
 def desenhar_pontuacao(pontuacao):
 
     fonte = pygame.font.SysFont("Helvetica", 35)
@@ -174,7 +167,7 @@ def selecionar_velocidade(tecla):
         velocidade_x = -tamanho_quadrado
         velocidade_y = 0
     return velocidade_x, velocidade_y
-q = "37"
+
 def desenhar_fundo_xadrez(tamanho_quadrado, largura, altura):
     for y in range(0, altura, tamanho_quadrado):
         for x in range(0, largura, tamanho_quadrado):
@@ -198,7 +191,6 @@ def esperar_acao(id_usuario):
                     pygame.quit()
                     exit()
 
-z = q
 def rodar_jogo(id_usuario):
     global pontuacao
     pontuacao = 0
@@ -246,7 +238,6 @@ def rodar_jogo(id_usuario):
     recorde = obter_recorde(id_usuario)
     desenhar_final(pontuacao, recorde)
     esperar_acao(id_usuario)
-
 
 def esperar_enter():
     # Espera até que o usuário pressione a tecla Enter
